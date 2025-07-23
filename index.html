@@ -185,14 +185,14 @@
             margin-top: 30px;
         }
 
-        .ingredients, .instructions {
+        .Ingredientes, .Instrucciones {
             background: #f7fafc;
             padding: 30px;
             border-radius: 15px;
             border-left: 5px solid #ff6b6b;
         }
 
-        .ingredients h3, .instructions h3 {
+        .Ingredientes h3, .Instrucciones h3 {
             font-size: 1.5rem;
             color: #2d3748;
             margin-bottom: 20px;
@@ -201,12 +201,12 @@
             gap: 10px;
         }
 
-        .ingredients h3::before {
+        .Ingredientes h3::before {
             content: '🥗';
             font-size: 1.2rem;
         }
 
-        .instructions h3::before {
+        .Instrucciones h3::before {
             content: '👨‍🍳';
             font-size: 1.2rem;
         }
@@ -226,8 +226,8 @@
         }
 
         .checkbox {
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             border: 2px solid #cbd5e0;
             border-radius: 4px;
             cursor: pointer;
@@ -239,7 +239,7 @@
 
         .checkbox:hover {
             border-color: #ff6b6b;
-            transform: scale(1.1);
+            transform: scale(1.5);
         }
 
         .checkbox.checked {
@@ -326,7 +326,7 @@
                 gap: 20px;
             }
 
-            .ingredients, .instructions {
+            .Ingredientes, .Instrucciones {
                 padding: 20px;
             }
 
@@ -346,7 +346,7 @@
                 font-size: 1.7rem;
             }
 
-            .ingredients, .instructions {
+            .Ingredientes, .Instrucciones {
                 padding: 15px;
             }
         }
@@ -382,39 +382,52 @@
                 </div>
             </div>
             <div class="recipe-sections">
-                <div class="ingredients">
-                    <h3>Ingredients</h3>
+                <div class="Ingredientes">
+                    <h3>Ingredientes</h3>
+                    <h4>Para la masa
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
                         <span class="item-text">500g Harina</span>
                     </div>
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
-                        <span class="item-text">200g Manteca o Margarina</span>
+                        <span class="item-text">140g Agua</span>
                     </div>
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
-                        <span class="item-text">10g Levadura frestca</span>
+                        <span class="item-text">55g Azucar</span>
                     </div>
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
-                        <span class="item-text">50g Leche</span>
+                        <span class="item-text">40g Manteca</span>
                     </div>
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
-                        <span class="item-text">50g Manteca</span>
+                        <span class="item-text">11g Levadura</span>
                     </div>
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
-                        <span class="item-text">10g Sal</span>
+                        <span class="item-text">12g Sal</span>
+                    </div>
+                    </h4>
+                    <h4>Para el laminado
+                    <div class="ingredient-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <span class="item-text">280g Manteca</span>
                     </div>
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
-                        <span class="item-text">350g Agua</span>
+                        <span class="item-text">60g Huevo</span>
                     </div>
+                    
+                    <div class="ingredient-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <span class="item-text">1 Cucharita Agua</span>
+                    </div>
+                    </h4>
                 </div>
-                <div class="instructions">
-                    <h3>Instructions</h3>
+                <div class="Instrucciones">
+                    <h3>Instrucciones</h3>
                     <div class="instruction-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
                         <span class="step-number">1</span>
@@ -464,8 +477,8 @@
                 </div>
             </div>
             <div class="recipe-sections">
-                <div class="ingredients">
-                    <h3>Ingredients</h3>
+                <div class="Ingredientes">
+                    <h3>Ingredientes</h3>
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
                         <span class="item-text">4 huevos</span>
@@ -487,8 +500,8 @@
                         <span class="item-text">200g Azucar</span>
                     </div>
                 </div>
-                <div class="instructions">
-                    <h3>Instructions</h3>
+                <div class="Instrucciones">
+                    <h3>Instrucciones</h3>
                     <div class="instruction-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
                         <span class="step-number">1</span>
@@ -622,5 +635,166 @@ if (window.innerWidth <= 768) {
             }, 100);
         });
     });
+}
+
+
+//
+//
+//
+// Ingredient calculator based on flour percentage
+const ingredientPercentages = {
+    // Para la masa
+    'Agua': 28,      // 140g / 500g = 28%
+    'Azucar': 11,    // 55g / 500g = 11%
+    'Manteca': 8,    // 40g / 500g = 8%
+    'Levadura': 2.2, // 11g / 500g = 2.2%
+    'Sal': 2.4,      // 12g / 500g = 2.4%
+    // Para el laminado
+    'Manteca_laminado': 56,  // 350g / 500g = 70%
+    'Huevo_laminado': 12,  // 60g / 500g = 70%
+    'Agua_laminado': 1  // 5g / 500g = 70%
+};
+
+function createFlourInput() {
+    // Create input field for flour
+    const flourInput = document.createElement('input');
+    flourInput.type = 'number';
+    flourInput.id = 'flour-input';
+    flourInput.value = '500';
+    flourInput.min = '1';
+    flourInput.step = '1';
+    flourInput.placeholder = 'Cantidad de harina (g)';
+    
+    // Style the input
+    flourInput.style.cssText = `
+        width: 80px;
+        padding: 4px 8px;
+        border: 2px solid #cbd5e0;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        margin-left: 10px;
+        background: #fff;
+        transition: border-color 0.2s ease;
+    `;
+    
+    // Add focus styles
+    flourInput.addEventListener('focus', () => {
+        flourInput.style.borderColor = '#ff6b6b';
+        flourInput.style.outline = 'none';
+        flourInput.style.boxShadow = '0 0 0 3px rgba(255, 107, 107, 0.1)';
+    });
+    
+    flourInput.addEventListener('blur', () => {
+        flourInput.style.borderColor = '#cbd5e0';
+        flourInput.style.boxShadow = 'none';
+    });
+    
+    return flourInput;
+}
+
+function updateIngredients() {
+    const flourInput = document.getElementById('flour-input');
+    if (!flourInput) return;
+    
+    const flourAmount = parseFloat(flourInput.value) || 500;
+    
+    // Update all ingredient amounts based on flour percentage
+    document.querySelectorAll('.ingredient-item .item-text').forEach(item => {
+        const text = item.textContent;
+        
+        // Skip if it's the flour item (base ingredient)
+        if (text.includes('Harina')) return;
+        
+        // Extract ingredient name and calculate new amount
+        let ingredientName = '';
+        let newAmount = 0;
+        const parentText = item.closest('h4')?.textContent
+        // const parentText = item.parentElement.textContent
+        //  item.closest('h4')?.textContent?.includes('laminado')
+        // item.closest('h4')
+        console.log(parentText)
+        if ( parentText?.includes('masa'))
+        {
+            if (text.includes('Agua')) {
+                ingredientName = 'Agua';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Agua / 100);
+            } else if (text.includes('Azucar')) {
+                ingredientName = 'Azucar';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Azucar / 100);
+            } else if (text.includes('Manteca')) {
+                ingredientName = 'Manteca';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Manteca / 100);
+            } else if (text.includes('Levadura')) {
+                ingredientName = 'Levadura';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Levadura / 100);
+            } else if (text.includes('Sal')) {
+                ingredientName = 'Sal';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Sal / 100);
+            } 
+        }
+
+        if ( parentText?.includes('laminado'))
+        {
+            if (text.includes('Manteca')) {
+                ingredientName = 'Manteca';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Manteca_laminado / 100);
+            }
+            if (text.includes('Agua')) {
+                ingredientName = 'Agua';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Agua_laminado / 100);
+            }
+            if (text.includes('Huevo')) {
+                ingredientName = 'Huevo';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Huevo_laminado / 100);
+            }
+        }
+        
+        // Update the text with new calculated amount
+        if (ingredientName && newAmount > 0) {
+            item.textContent = `${newAmount}g ${ingredientName}`;
+        }
+    });
+}
+
+function initializeIngredientCalculator() {
+    // Find the flour ingredient item
+    const flourItem = document.querySelector('.ingredient-item .item-text[textContent*="Harina"], .ingredient-item .item-text');
+    
+    let flourTextElement = null;
+    document.querySelectorAll('.ingredient-item .item-text').forEach(item => {
+        if (item.textContent.includes('Harina')) {
+            flourTextElement = item;
+        }
+    });
+    
+    if (flourTextElement) {
+        // Create and insert the input field
+        const flourInput = createFlourInput();
+        flourTextElement.appendChild(flourInput);
+        
+        // Update the flour text to be more interactive
+        const currentText = flourTextElement.textContent;
+        flourTextElement.innerHTML = currentText.replace(/\d+g/, '') + 'g ';
+        flourTextElement.appendChild(flourInput);
+        
+        // Add event listeners for real-time updates
+        flourInput.addEventListener('input', updateIngredients);
+        flourInput.addEventListener('change', updateIngredients);
+        
+        // Initial calculation
+        updateIngredients();
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeIngredientCalculator);
+
+// Also initialize if DOM is already loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeIngredientCalculator);
+} else {
+    initializeIngredientCalculator();
 }
 </script>
