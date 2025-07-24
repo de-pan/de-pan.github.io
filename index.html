@@ -384,7 +384,12 @@
             <div class="recipe-sections">
                 <div class="Ingredientes">
                     <h3>Ingredientes</h3>
-                    <h4>Para la masa
+                    <p class="meta-item">
+                        <button onclick="increaseByValue(-100)"> - 100 g   </button>  
+                        <button onclick="increaseByValue(100)"> + 100 g   </button>
+                    </p>
+                    <br>
+                    <h4 class="input-harina">Para la masa
                     <div class="ingredient-item">
                         <div class="checkbox" onclick="toggleCheck(this)"></div>
                         <span class="item-text">500g Harina</span>
@@ -578,6 +583,16 @@ function toggleCheck(checkbox) {
     }
 }
 
+function increaseByValue(value) {
+     const flourInput = document.getElementById('flour-input');
+    if (!flourInput) return;
+    
+    const flourAmount = parseFloat(flourInput.value) || 500;
+    const toadd = parseFloat(value) || 0;
+    flourInput.value = parseInt(flourAmount+toadd);
+    updateIngredients()
+}
+
 // Add keyboard navigation for accessibility
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -644,6 +659,7 @@ if (window.innerWidth <= 768) {
 // Ingredient calculator based on flour percentage
 const ingredientPercentages = {
     // Para la masa
+    'Harina': 100,      // 140g / 500g = 28%
     'Agua': 28,      // 140g / 500g = 28%
     'Azucar': 11,    // 55g / 500g = 11%
     'Manteca': 8,    // 40g / 500g = 8%
@@ -660,7 +676,7 @@ function createFlourInput() {
     const flourInput = document.createElement('input');
     flourInput.type = 'number';
     flourInput.id = 'flour-input';
-    flourInput.value = '500';
+    flourInput.value = '1000';
     flourInput.min = '1';
     flourInput.step = '1';
     flourInput.placeholder = 'Cantidad de harina (g)';
@@ -705,21 +721,18 @@ function updateIngredients() {
         const text = item.textContent;
         
         // Skip if it's the flour item (base ingredient)
-        if (text.includes('Harina')) return;
+        // if (text.includes('Harina')) return;
         
         // Extract ingredient name and calculate new amount
         let ingredientName = '';
         let newAmount = 0;
         const parentText = item.closest('h4')?.textContent
-        // const parentText = item.parentElement.textContent
-        //  item.closest('h4')?.textContent?.includes('laminado')
-        // item.closest('h4')
-        console.log(parentText)
+       
         if ( parentText?.includes('masa'))
         {
-            if (text.includes('Agua')) {
-                ingredientName = 'Agua';
-                newAmount = Math.round(flourAmount * ingredientPercentages.Agua / 100);
+            if (text.includes('Harina')) {
+                ingredientName = 'Harina';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Harina / 100);
             } else if (text.includes('Azucar')) {
                 ingredientName = 'Azucar';
                 newAmount = Math.round(flourAmount * ingredientPercentages.Azucar / 100);
@@ -732,6 +745,9 @@ function updateIngredients() {
             } else if (text.includes('Sal')) {
                 ingredientName = 'Sal';
                 newAmount = Math.round(flourAmount * ingredientPercentages.Sal / 100);
+            }  else if (text.includes('Agua')) {
+                ingredientName = 'Agua';
+                newAmount = Math.round(flourAmount * ingredientPercentages.Agua / 100);
             } 
         }
 
@@ -760,11 +776,11 @@ function updateIngredients() {
 
 function initializeIngredientCalculator() {
     // Find the flour ingredient item
-    const flourItem = document.querySelector('.ingredient-item .item-text[textContent*="Harina"], .ingredient-item .item-text');
+    // const flourItem = document.querySelector('.input-harina[textContent*="masa"], .input-harina');
     
     let flourTextElement = null;
-    document.querySelectorAll('.ingredient-item .item-text').forEach(item => {
-        if (item.textContent.includes('Harina')) {
+    document.querySelectorAll('.input-harina').forEach(item => {
+        if (item.textContent.includes('masa')) {
             flourTextElement = item;
         }
     });
@@ -772,12 +788,13 @@ function initializeIngredientCalculator() {
     if (flourTextElement) {
         // Create and insert the input field
         const flourInput = createFlourInput();
-        flourTextElement.appendChild(flourInput);
+        // flourTextElement.prepend(flourInput);
         
         // Update the flour text to be more interactive
         const currentText = flourTextElement.textContent;
-        flourTextElement.innerHTML = currentText.replace(/\d+g/, '') + 'g ';
-        flourTextElement.appendChild(flourInput);
+        // flourTextElement.innerHTML = currentText.replace(/\d+g/, '') + 'g ';
+        // flourTextElement.innerHTML = `${flourInput.value}g Harina`;
+        flourTextElement.before(flourInput);
         
         // Add event listeners for real-time updates
         flourInput.addEventListener('input', updateIngredients);
